@@ -1,97 +1,42 @@
 <template>
   <div class="flex justify-center w-full place-items-center pt-10">
-    <a-form
-      :model="form"
-      ref="formRef"
-      @submit="listNFT"
-      size="lg"
-      :layout="layout"
-      class="bg-white shadow-md rounded px-8 pt-4 pb-8 mb-4"
-      :label-col-props="labelColProps"
-      :wrapper-col-props="wrapperColProps"
-      style="width: 28.5rem">
+    <a-form :model="form" ref="formRef" @submit="listNFT" size="lg" :layout="layout"
+      class="bg-white shadow-md rounded px-8 pt-4 pb-8 mb-4" :label-col-props="labelColProps"
+      :wrapper-col-props="wrapperColProps" style="width: 28.5rem">
       <h3 className="text-center text-base font-bold text-purple-500 mb-8 ">
         Upload your NFT to the marketplace
       </h3>
-      <a-form-item
-        field="name"
-        label="NFT Name"
-        :rules="rules.name"
-        validate-trigger="blur"
-        class="mb-4">
-        <a-input
-          v-model="form.name"
-          placeholder="Axie#4563" />
+      <a-form-item field="name" label="NFT Name" :rules="rules.name" validate-trigger="blur" class="mb-4">
+        <a-input v-model="form.name" placeholder="Axie#4563" />
       </a-form-item>
-      <a-form-item
-        field="description"
-        label="NFT Description"
-        :rules="rules.description"
-        validate-trigger="blur"
+      <a-form-item field="description" label="NFT Description" :rules="rules.description" validate-trigger="blur"
         class="mb-6">
-        <a-textarea
-          v-model="form.description"
-          :auto-size="autoSize"
-          placeholder="Axie Infinity Collection"
-          :max-length="100"
-          allow-clear
-          show-word-limit />
+        <a-textarea v-model="form.description" :auto-size="autoSize" placeholder="Axie Infinity Collection"
+          :max-length="100" allow-clear show-word-limit />
       </a-form-item>
-      <a-form-item
-        field="price"
-        label="Price (in ETH)"
-        :rules="rules.price"
-        validate-trigger="blur"
-        class="mb-6">
-        <a-input-number
-          v-model="form.price"
-          :default-value="0"
-          mode="button"
-          :step="0.01"
-          size=""
-          :min="0.01"
+      <a-form-item field="price" label="Price (in ETH)" :rules="rules.price" validate-trigger="blur" class="mb-6">
+        <a-input-number v-model="form.price" :default-value="0" mode="button" :step="0.01" size="" :min="0.01"
           placeholder="Min 0.01 ETH" />
       </a-form-item>
-      <a-form-item
-        field="image"
-        label="Upload Image (<500 KB)"
-        validate-trigger="input"
-        class="mb-6">
+      <a-form-item field="image" label="Upload Image (<500 KB)" validate-trigger="input" class="mb-6">
         <div class="flex flex-col gap-4">
-          <input
-            type="file"
-            class="flex w-full"
-            @change="OnChangeFile"
-            placeholder="Upload your NFT image" />
+          <input type="file" class="flex w-full" @change="OnChangeFile" placeholder="Upload your NFT image" />
           <!-- 进度条 -->
-          <a-progress
-            v-if="isUploading"
-            size="large"
-            :percent="progress / 100"
-            :style="{ width: '100%' }">
+          <a-progress v-if="isUploading" size="large" :percent="progress / 100" :style="{ width: '100%' }">
             <template #text="scope">进度 {{ scope.percent * 100 }}%</template>
           </a-progress>
 
           <!-- 上传状态 -->
-          <p
-            v-if="uploadStatus === 'success' && isUploading"
-            class="text-green-500">
+          <p v-if="uploadStatus === 'success' && isUploading" class="text-green-500">
             上传成功！
           </p>
-          <p
-            v-if="uploadStatus === 'error' && errorMessage"
-            class="text-red-500">
+          <p v-if="uploadStatus === 'error' && errorMessage" class="text-red-500">
             {{ errorMessage }}
           </p>
         </div>
       </a-form-item>
       <a-form-item>
-        <a-button
-          type="primary"
-          @click="listNFT"
-          :disabled="status"
-          size="large"
-          style="width: 100%">
+        <a-button type="primary" @click="listNFT" :disabled="status" size="large" style="width: 100%">
           List NFT
         </a-button>
       </a-form-item>
@@ -104,15 +49,20 @@ import axios from 'axios'
 import FormData from 'form-data'
 import { isStrctEmptyStr } from '@/market'
 import { NFTFrom, uploadJSONToIPFS } from '@/pinata'
-import { Message } from '@arco-design/web-vue'
 import { BrowserProvider, Contract, parseUnits, toBeHex } from 'ethers'
 import { reactive, ref } from 'vue'
 import Marketplace from '@/Marketplace.json'
+import { useAccount } from '@wagmi/vue';
+import { WALLET_ERROR, CHIAN_ID_ERROR, CONNECT_ERROR } from '@/market'
+import { Message } from '@arco-design/web-vue'
 
 // $refs.formRef.resetFields()
 defineOptions({
   name: 'ListMyNFT',
 })
+const { address, chainId } = useAccount();
+const { success, warning, error } = Message
+
 // 上传进度0-100
 const progress = ref<number>(0)
 // 上传状态:success,error
@@ -140,35 +90,7 @@ const labelColProps = ref({
   span: 24,
   offset: 0,
 })
-// const OnChangeFile = async (fileList: FileItem[]) => {
-//     if (fileList.length > 0) {
-//         status.value = true;
-//         const fileItem = fileList[0]; // 因为设置了:limit="1"，所以取第一个即可
-//         console.log('file', fileItem);
-//         let file = fileItem.file!;
-//         action.value = "/api-pinata/ipfs/";
-//         // 这里可以对 file 进行后续处理，比如获取文件对象、预览等
-//         try {
-//
-//             const imgUrl = await uploadFileToIPFS(file);
-//             console.log('imgUrl', imgUrl)
-//             // if (imgUrl) {
-//             //     console.log('imgurl', imgUrl);
-//             //     action.value = imgUrl;
-//             //     fileItem.url = imgUrl;
-//             //     form.image = [fileItem];
-//             //     status.value = false;
-//             // }
-//         } catch (e) {
-//             status.value = false;
-//             console.log("Error during file upload", e);
-//             Message.error('Image upload failed, please try again');
-//             // 清除表单中 image 字段的错误状态
-//             formRef.value?.clearValidate("image");
-//         }
-//     }
 
-// };
 const OnChangeFile = async (e: Event) => {
   const input = e.target as HTMLInputElement
   const fileList = input?.files as unknown as any[]
@@ -231,7 +153,7 @@ const OnChangeFile = async (e: Event) => {
     form.image = imgUrl // 预览图地址
     uploadStatus.value = 'success'
 
-    Message.success('Image uploaded successfully!')
+    success('Image uploaded successfully!')
   } catch (e: any) {
     status.value = false
     uploadStatus.value = 'error'
@@ -284,16 +206,34 @@ const rules = {
 }
 
 const listNFT = async (e: Event) => {
+
   errorMessage.value = ''
+  if (status.value) {
+    return;
+  }
   e.preventDefault()
   // console.log('form', form)
   // 执行表单验证 验证不通过有值，通过undefined;
   const validateResult = await formRef.value.validate()
   console.log('isValid', validateResult)
+  // 有值就报错
   if (validateResult) {
     return
   }
-  if (!form.image || isStrctEmptyStr(form.image) || !window.ethereum) {
+  if (!window.ethereum) {
+    warning(WALLET_ERROR)
+    return;
+  }
+  if (!chainId.value || !address.value) {
+    warning(CONNECT_ERROR)
+    return;
+  }
+  if (chainId.value !== 31337) {
+    warning(CHIAN_ID_ERROR)
+    return;
+  }
+
+  if (!form.image || isStrctEmptyStr(form.image)) {
     uploadStatus.value = 'error'
     errorMessage.value = 'Please fill all the fields!'
     return
@@ -319,21 +259,30 @@ const listNFT = async (e: Event) => {
       value: listingPrice.toString(),
     })
     await transaction.wait()
-    Message.success('Successfully listed your NFT!')
+    success('Successfully listed your NFT!')
     // // 使用接口
     status.value = false
     formRef.value?.clearValidate()
     router.push({ path: '/', replace: true })
   } catch (e: any) {
+
     console.log('提交错误:', e)
+    // 详细的错误处理
+    if (e.message.includes('Network Error')) {
+      error('网络请求失败，请检查网络连接');
+    } else if (e.message.includes('execution reverted')) {
+      error('合约调用getAllNFTs方法失败，请联系管理员')
+    } else {
+      error(e.message || 'Listing failed, please try again')
+    }
+  } finally {
     status.value = false
-    Message.error(e.message || 'Listing failed, please try again')
   }
 }
 </script>
 <style lang="scss" scoped>
 :deep(.arco-form) {
-  .arco-form-item-label-col > .arco-form-item-label {
+  .arco-form-item-label-col>.arco-form-item-label {
     color: rgb(168 85 247);
   }
 
@@ -341,6 +290,7 @@ const listNFT = async (e: Event) => {
   .arco-form-item-wrapper-col {
     border-radius: 50%;
   }
+
   .arco-btn-secondary[type='button'] {
     font-weight: 500;
     color: white;

@@ -1,0 +1,1 @@
+import{e as o,m as e,j as s}from"./@vue-DVdXjGaL.js";import"./vite-plugin-node-polyfills-Dh68s0dh.js";const t=o({name:"NotFound",__name:"NotFound",setup:o=>(o,t)=>(s(),e("div",null,"404"))});export{t as default};

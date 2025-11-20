@@ -4,14 +4,34 @@
 
     <main class="w-full">
       <router-view />
+      <Connect v-if="isOpen" :digVisible="isOpen" @update:cancel="closeModel" />
+
+      <UserWallet v-if="isConnected" :digVisible="isConnected" @update:cancel="closeUserModel" />
     </main>
   </div>
+
 </template>
 <script setup lang="ts">
+import useModalStore from '@/store/modal';
 import Header from '@/components/Header.vue'
+import Connect from "@/components/ConnectWallet.vue";
+import UserWallet from './components/UserWallet.vue';
+import { onMounted ,computed} from 'vue';
 defineOptions({
   name: 'App',
 })
+const modelStore = useModalStore();
+const isOpen = computed(() => modelStore.isOpen);
+const isConnected =  computed(() => modelStore.isConnected);
+const closeModel = () => {
+    modelStore.closeModal();
+}
+const closeUserModel = () =>  {
+    modelStore.closeUserLogin();
+}
+onMounted(() => {
+  console.log('App 组件挂载完成');
+});;
 </script>
 <style scoped lang="scss">
 .logo {
@@ -20,12 +40,15 @@ defineOptions({
   transition: filter 300ms;
   will-change: filter;
 }
+
 .logo:hover {
   filter: drop-shadow(0 0 2em #646cffaa);
 }
+
 .logo.vue:hover {
   filter: drop-shadow(0 0 2em #42b883aa);
 }
+
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   font-weight: 400;
@@ -38,12 +61,14 @@ defineOptions({
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
 *,
 *::before,
 *::after {
   box-sizing: border-box;
   margin: 0;
 }
+
 body {
   min-width: 320px;
   min-height: 100vh;
@@ -53,29 +78,35 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
 .app-bg {
   background: url('@/assets/images/bg.png') no-repeat;
   background-size: 100% 100%;
 }
+
 a {
   font-weight: 500;
   color: #646cff;
   text-decoration: inherit;
 }
+
 a:hover {
   color: #535bf2;
 }
+
 .menu-demo {
   box-sizing: border-box;
   width: 100%;
   padding: 40px;
   background-color: var(--color-neutral-2);
 }
+
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
   transform: scale(1.05, 1.05);
 }
+
 button {
   padding: 0.6em 1.2em;
   font-family: inherit;
@@ -87,16 +118,20 @@ button {
   border-radius: 8px;
   transition: border-color 0.25s;
 }
+
 button:hover {
   border-color: #646cff;
 }
+
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
+
 .card {
   padding: 2em;
 }
+
 #app {
   max-width: 1280px;
   padding: 2rem;
@@ -109,9 +144,11 @@ button:focus-visible {
     color: #213547;
     background-color: #ffffff;
   }
+
   a:hover {
     color: #747bff;
   }
+
   button {
     background-color: #f9f9f9;
   }

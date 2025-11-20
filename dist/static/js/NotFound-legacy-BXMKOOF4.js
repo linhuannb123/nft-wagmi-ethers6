@@ -1,0 +1,1 @@
+System.register(["./@vue-legacy-CptInZ8Z.js","./vite-plugin-node-polyfills-legacy-DALTojBt.js"],function(e,t){"use strict";var n,u,l;return{setters:[e=>{n=e.e,u=e.m,l=e.j},null],execute:function(){e("default",n({name:"NotFound",__name:"NotFound",setup:e=>(e,t)=>(l(),u("div",null,"404"))}))}}});

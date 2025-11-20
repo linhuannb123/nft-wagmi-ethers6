@@ -1,7 +1,7 @@
 import { defineConfig, type ConfigEnv, loadEnv } from 'vite';
 import { wrapperEnv } from './build/utils';
 import { createVitePlugins } from './build/vite/plugins';
-import { fileURLToPath } from 'node:url'
+import { resolve } from 'node:path'
 
 
 // https://vitejs.dev/config/
@@ -27,12 +27,13 @@ const config = defineConfig(({ command, mode }: ConfigEnv): any => {
     base: "/",
     plugins: [...createVitePlugins(viteEnv, isBuild)],
     optimizeDeps: {
-      include: ['vue', 'vue-router', 'pinia', 'axios', 'ethers']
+      include: ['vue', 'vue-router', 'pinia', 'axios', 'ethers', '@arco-design/web-vue', '@wagmi/vue', '@tanstack/vue-query'],
+      exclude: ['basic-HACOJU3R'],// 替换为实际有问题的依赖名，可从警告路径中分析
     },
     resolve: {
       alias: {
-        '@': fileURLToPath(new URL('./src', import.meta.url)),
-        '#': fileURLToPath(new URL('./types', import.meta.url)),
+        '@': resolve(process.cwd(), 'src'),
+        '#': resolve(process.cwd(), 'types'),
         crypto: 'crypto-browserify',
         stream: 'stream-browserify',
         assert: 'assert',

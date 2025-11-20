@@ -31,13 +31,16 @@
     ".cspell"
   ],
   "words": [
+    "appkit",
     "Avenir",
     "Axie",
     "axios",
     "commitlint",
     "curently",
+    "doption",
     "gifsicl",
     "gifsicle",
+    "HACOJU",
     "heyue",
     "hover",
     "imgurl",
@@ -50,14 +53,18 @@
     "Numberish",
     "optipng",
     "persistedstate",
+    "pinkpurple",
     "pngquant",
+    "reown",
     "sellnft",
     "shouye",
     "Strct",
     "Unocss",
     "unplugin",
+    "viem",
     "VITE",
     "Vueuse",
+    "wagmi",
     "warpple"
   ]
 }

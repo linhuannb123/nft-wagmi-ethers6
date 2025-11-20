@@ -5,7 +5,6 @@
     "module": "esnext",
     "rootDir": ".",
     "outDir": "dist",
-
     "moduleResolution": "bundler",
     "useDefineForClassFields": true,
     "strict": true,

@@ -25,3 +25,23 @@ declare global {
 declare module 'vue' {
     export type JSXComponent<Props = any> = { new(): ComponentPublicInstance<Props> } | FunctionalComponent<Props>;
 }
+declare module '@wagmi/vue'{
+    interface Register{
+        config: typeof config;
+    }
+}
+
+export interface ImportMetaEnv {
+    readonly VITE_PROJECT_ID: string;
+    readonly VITE_APP_PINATA_KEY: string;
+    readonly VITE_APP_PINATA_SECRET: string;
+    readonly VITE_APP_PINATA_JWT: string;
+    readonly VITE_PRIVATEKEY_ADDRESS: string;
+    readonly VITE_RPC_URL: string;
+    readonly VITE_USE_MOCK:'true' | 'false';
+    readonly VITE_USE_COMPRESS:'true' | 'false';
+}
+
+export interface ImportMeta {
+    readonly env: ImportMetaEnv;
+}

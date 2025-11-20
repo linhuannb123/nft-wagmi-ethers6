@@ -1,6 +1,5 @@
 import { PluginOption } from 'vite'
 // import { ConfigPagesPlugin } from "./pages";
-import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import vueSetupExtend from 'vite-plugin-vue-setup-extend'
 
@@ -19,6 +18,7 @@ import { ConfigImagePlugin } from './image'
 import { ConfigNodePolyfillsPlugin } from './polyfills'
 import { ConfigCheckerPlugin } from './checker'
 import { ConfigLegacy } from './legacy'
+import { ConfigVuePlugin } from './vue'
 // import { ConfigUnocssPlugin } from "./unocss";
 export function createVitePlugins(
   viteEnv: Record<string, any>,
@@ -30,7 +30,7 @@ export function createVitePlugins(
     //自动生成路由
     // ConfigPagesPlugin(),
     // vue支持
-    vue(),
+    ConfigVuePlugin(),
     // JSX支持
     vueJsx(),
     // setup语法糖组件名组件

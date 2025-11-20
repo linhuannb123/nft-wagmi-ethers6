@@ -30,6 +30,12 @@ const staticRoutes: Array<RouteRecordRaw> = [
     component: () => import('@/views/NotFound.vue'),
     meta: { title: '页面未找到', icon: '', requiresAuth: false, order: 1000 },
   },
+  {
+    path: '/model',
+    name: 'NotFound',
+    component: () => import('@/components/ConnectWallet.vue'),
+    meta: { title: 'connect', icon: '', requiresAuth: false, order: 2000 },
+  },
 ]
 
 // 动态路由加载(基于文件系统自动导入)

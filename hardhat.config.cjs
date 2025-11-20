@@ -25,7 +25,7 @@ task('block-number', 'Prints the current block number').setAction(
 
 // 从环境变量获取配置
 const BSC_TEST = process.env.VITE_RPC_URL
-const PRIVATE_KEY = process.env.VITE_APP_PRIVATE_KEY
+const PRIVATE_KEY = process.env.VITE_PRIVATEKEY_ADDRESS
 console.log('env', BSC_TEST, PRIVATE_KEY)
 
 /** @type import('hardhat/config').HardhatUserConfig */

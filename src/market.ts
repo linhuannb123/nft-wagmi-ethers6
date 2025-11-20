@@ -1,12 +1,12 @@
 import {
   BigNumberish,
-  BrowserProvider,
-  Contract,
+  // BrowserProvider,
+  // Contract,
   formatUnits,
   parseEther,
 } from 'ethers'
 
-import Marketplace from '@/Marketplace.json'
+// import Marketplace from '@/Marketplace.json'
 export interface MarketItem {
   price: string
   itemId: number
@@ -36,7 +36,7 @@ export interface INFTList {
 }
 //定义一些常见报错
 
-const INVALID_AMOUNT_MSG = '输入价格必须大于 0'
+// const INVALID_AMOUNT_MSG = '输入价格必须大于 0'
 /**
  * 安全地将金额字符串转化为Wei
  * @param amount 金额字符串 （如 "1.5"）
@@ -97,6 +97,33 @@ export const sumPriceArray = (priceArr: number[]) => {
 }
 
 /**
+ * 四舍五入保留指定位数小数
+ * @param num 要处理的数字（支持数字或数字字符串）
+ * @param decimalPlaces 保留的小数位数（默认为 2 位）
+ * @returns 处理后的数字（或原始值，若输入无效）
+ */
+export const roundNumber = (num: number | string, decimalPlaces: number = 2): number | string => {
+  // 校验小数位数参数（必须是非负整数）
+  if (!Number.isInteger(decimalPlaces) || decimalPlaces < 0) {
+    console.error('小数位数必须是非负整数');
+    return num; // 输入无效时返回原始值
+  }
+
+  // 处理输入为字符串的情况
+  const number = typeof num === 'string' ? parseFloat(num) : num;
+
+  // 校验输入是否为有效数字
+  if (isNaN(number)) {
+    console.error('输入必须是有效的数字或数字字符串');
+    return num; // 输入无效时返回原始值
+  }
+
+  // 四舍五入核心逻辑（利用 10 的幂次放大后取整，再缩小）
+  const power = Math.pow(10, decimalPlaces);
+  return Math.round(number * power) / power;
+};
+
+/**
  * 判断是否为空字符串
  * @param str 判断的字符串
  * @returns {boolean}
@@ -114,6 +141,19 @@ export const formatAddress = (addr: string): string => {
   return `Connected to 0x${addressWithoutPrefix.slice(0, 8)}...${addressWithoutPrefix.slice(-8)}`
 }
 
+export const formatUserAddress = (addr: string): string => {
+  if (addr === '') return ''
+  const address = addr.toLowerCase()
+  const hasPrefix = address.startsWith('0x')
+  const addressWithoutPrefix = hasPrefix ? address.slice(2) : address
+
+  if (addressWithoutPrefix.length <= 16) return address
+  return `0x${addressWithoutPrefix.slice(0, 8)}...${addressWithoutPrefix.slice(-8)}`
+}
+
+export const WALLET_ERROR = 'Please install MetaMask!';
+export const CHIAN_ID_ERROR = 'Please switch Localhost network!';
+export const CONNECT_ERROR = 'Please connect wallet!';
 // 创建Token
 
 // export const createMyToken = async (contract:Contract,tokenUrl: string, price: string, ListingPrice: string): Promise<any> => {
@@ -146,30 +186,30 @@ export const formatAddress = (addr: string): string => {
  * @param price
  * @returns
  */
-export const updateListPrice = async (price: string): Promise<void> => {
-  if (!window.ethereum) {
-    return
-  }
+// export const updateListPrice = async (price: string): Promise<void> => {
+//   if (!window.ethereum) {
+//     return
+//   }
 
-  if (Number(price) <= 0) {
-    throw new Error(INVALID_AMOUNT_MSG)
-  }
-  const amount = formatUnits(price, 'ether')
-  try {
-    const provider = new BrowserProvider(window.ethereum)
-    const signer = await provider.getSigner()
-    const contract = new Contract(
-      Marketplace.address,
-      Marketplace.abi,
-      await signer,
-    )
-    const transaction = await contract.updateListPrice(amount)
-    await transaction.wait()
-    return Promise.resolve(transaction)
-  } catch (e) {
-    throw new Error('更新列表价格失败,:' + e)
-  }
-}
+//   if (Number(price) <= 0) {
+//     throw new Error(INVALID_AMOUNT_MSG)
+//   }
+//   const amount = formatUnits(price, 'ether')
+//   try {
+//     const provider = new BrowserProvider(window.ethereum)
+//     const signer = await provider.getSigner()
+//     const contract = new Contract(
+//       Marketplace.address,
+//       Marketplace.abi,
+//       await signer,
+//     )
+//     const transaction = await contract.updateListPrice(amount)
+//     await transaction.wait()
+//     return Promise.resolve(transaction)
+//   } catch (e) {
+//     throw new Error('更新列表价格失败,:' + e)
+//   }
+// }
 
 /**
  * 功能：购买指定 NFT。
@@ -178,192 +218,192 @@ export const updateListPrice = async (price: string): Promise<void> => {
  * @param tokenId NFT的ID
  * @param price NFT的支付价格
  */
-export const executeSale = async (
-  tokenId: BigNumberish,
-  price: string,
-): Promise<void> => {
-  if (!window.ethereum) {
-    return
-  }
+// export const executeSale = async (
+//   tokenId: BigNumberish,
+//   price: string,
+// ): Promise<void> => {
+//   if (!window.ethereum) {
+//     return
+//   }
 
-  if (Number(price) <= 0) {
-    throw new Error(INVALID_AMOUNT_MSG)
-  }
-  const amount = formatUnits(price, 'ether')
-  try {
-    const provider = new BrowserProvider(window.ethereum)
-    const signer = await provider.getSigner()
-    const contract = new Contract(
-      Marketplace.address,
-      Marketplace.abi,
-      await signer,
-    )
-    const transaction = await contract.executeSale(tokenId, {
-      value: amount,
-    })
-    await transaction.wait()
-    console.log('You successfully bought the NFT!')
-  } catch (e) {
-    throw new Error('购买指定 NFT失败,:' + e)
-  }
-}
+//   if (Number(price) <= 0) {
+//     throw new Error(INVALID_AMOUNT_MSG)
+//   }
+//   const amount = formatUnits(price, 'ether')
+//   try {
+//     const provider = new BrowserProvider(window.ethereum)
+//     const signer = await provider.getSigner()
+//     const contract = new Contract(
+//       Marketplace.address,
+//       Marketplace.abi,
+//       await signer,
+//     )
+//     const transaction = await contract.executeSale(tokenId, {
+//       value: amount,
+//     })
+//     await transaction.wait()
+//     console.log('You successfully bought the NFT!')
+//   } catch (e) {
+//     throw new Error('购买指定 NFT失败,:' + e)
+//   }
+// }
 
 /**
  * 返回所有已创建的 NFT 列表（包含上架状态、价格等信息）。
  * @returns {ListedToken[]}
  */
-export const getAllNFTs = async (): Promise<ListedToken[]> => {
-  if (!window.ethereum) {
-    return []
-  }
+// export const getAllNFTs = async (): Promise<ListedToken[]> => {
+//   if (!window.ethereum) {
+//     return []
+//   }
 
-  try {
-    const provider = new BrowserProvider(window.ethereum)
-    const signer = await provider.getSigner()
-    const contract = new Contract(
-      Marketplace.address,
-      Marketplace.abi,
-      await signer,
-    )
-    const transaction = await contract.getAllNFTs()
-    await transaction.wait()
-    console.log('You successfully All List NFT!')
-    return transaction
-  } catch (e) {
-    throw new Error('获取NFT列表失败,:' + e)
-  }
-}
+//   try {
+//     const provider = new BrowserProvider(window.ethereum)
+//     const signer = await provider.getSigner()
+//     const contract = new Contract(
+//       Marketplace.address,
+//       Marketplace.abi,
+//       await signer,
+//     )
+//     const transaction = await contract.getAllNFTs()
+//     await transaction.wait()
+//     console.log('You successfully All List NFT!')
+//     return transaction
+//   } catch (e) {
+//     throw new Error('获取NFT列表失败,:' + e)
+//   }
+// }
 
 /**
  * 功能：返回调用者拥有的 NFT（包括作为卖家上架的或作为买家购买的）。
  * @returns {ListedToken[]}
  */
-export const getMyNFTs = async (): Promise<ListedToken[]> => {
-  if (!window.ethereum) {
-    return []
-  }
+// export const getMyNFTs = async (): Promise<ListedToken[]> => {
+//   if (!window.ethereum) {
+//     return []
+//   }
 
-  try {
-    const provider = new BrowserProvider(window.ethereum)
-    const signer = await provider.getSigner()
-    const contract = new Contract(
-      Marketplace.address,
-      Marketplace.abi,
-      await signer,
-    )
-    const transaction = await contract.getMyNFTs()
-    await transaction.wait()
-    console.log('You successfully My List NFT!')
-    return transaction
-  } catch (e) {
-    throw new Error('获取NFT列表失败,:' + e)
-  }
-}
+//   try {
+//     const provider = new BrowserProvider(window.ethereum)
+//     const signer = await provider.getSigner()
+//     const contract = new Contract(
+//       Marketplace.address,
+//       Marketplace.abi,
+//       await signer,
+//     )
+//     const transaction = await contract.getMyNFTs()
+//     await transaction.wait()
+//     console.log('You successfully My List NFT!')
+//     return transaction
+//   } catch (e) {
+//     throw new Error('获取NFT列表失败,:' + e)
+//   }
+// }
 
 /**
  * 功能：返回最新创建的 NFT 的 tokenId
  * @returns {BigNumberish | null}
  */
-export const getLatestIdToListedToken =
-  async (): Promise<BigNumberish | null> => {
-    if (!window.ethereum) {
-      return null
-    }
+// export const getLatestIdToListedToken =
+//   async (): Promise<BigNumberish | null> => {
+//     if (!window.ethereum) {
+//       return null
+//     }
 
-    try {
-      const provider = new BrowserProvider(window.ethereum)
-      const signer = await provider.getSigner()
-      const contract = new Contract(
-        Marketplace.address,
-        Marketplace.abi,
-        await signer,
-      )
-      const transaction = await contract.getLatestIdToListedToken()
-      await transaction.wait()
-      console.log('You successfully Get Latest NFT tokenId!')
-      return transaction
-    } catch (e) {
-      throw new Error('获取最新NFT的tokenId失败,:' + e)
-    }
-  }
+//     try {
+//       const provider = new BrowserProvider(window.ethereum)
+//       const signer = await provider.getSigner()
+//       const contract = new Contract(
+//         Marketplace.address,
+//         Marketplace.abi,
+//         await signer,
+//       )
+//       const transaction = await contract.getLatestIdToListedToken()
+//       await transaction.wait()
+//       console.log('You successfully Get Latest NFT tokenId!')
+//       return transaction
+//     } catch (e) {
+//       throw new Error('获取最新NFT的tokenId失败,:' + e)
+//     }
+//   }
 
 /**
  * 功能：根据 tokenId 查询指定 NFT 的上架信息。
  * @param tokenId
  * @returns {ListedToken | null}
  */
-export const getListedTokenForId = async (
-  tokenId: BigNumberish,
-): Promise<ListedToken | null> => {
-  if (!window.ethereum) {
-    return null
-  }
+// export const getListedTokenForId = async (
+//   tokenId: BigNumberish,
+// ): Promise<ListedToken | null> => {
+//   if (!window.ethereum) {
+//     return null
+//   }
 
-  try {
-    const provider = new BrowserProvider(window.ethereum)
-    const signer = await provider.getSigner()
-    const contract = new Contract(
-      Marketplace.address,
-      Marketplace.abi,
-      await signer,
-    )
-    const transaction = await contract.getListedTokenForId(tokenId)
-    await transaction.wait()
-    console.log(`You successfully Query ${tokenId}} NFT!`)
-    return transaction
-  } catch (e) {
-    throw new Error(`查询NFT的${tokenId}失败,:` + e)
-  }
-}
+//   try {
+//     const provider = new BrowserProvider(window.ethereum)
+//     const signer = await provider.getSigner()
+//     const contract = new Contract(
+//       Marketplace.address,
+//       Marketplace.abi,
+//       await signer,
+//     )
+//     const transaction = await contract.getListedTokenForId(tokenId)
+//     await transaction.wait()
+//     console.log(`You successfully Query ${tokenId}} NFT!`)
+//     return transaction
+//   } catch (e) {
+//     throw new Error(`查询NFT的${tokenId}失败,:` + e)
+//   }
+// }
 
 /**
  * 功能：根据 tokenId 查询指定 NFT 的上架信息。
  * @returns {ListedToken | null}
  */
-export const getCurrentToken = async (): Promise<ListedToken | null> => {
-  if (!window.ethereum) {
-    return null
-  }
+// export const getCurrentToken = async (): Promise<ListedToken | null> => {
+//   if (!window.ethereum) {
+//     return null
+//   }
 
-  try {
-    const provider = new BrowserProvider(window.ethereum)
-    const signer = await provider.getSigner()
-    const contract = new Contract(
-      Marketplace.address,
-      Marketplace.abi,
-      await signer,
-    )
-    const transaction = await contract.getCurrentToken()
-    await transaction.wait()
-    console.log(`You successfully Query Current NFT!`)
-    return transaction
-  } catch (e) {
-    throw new Error(`查询当前NFT的失败,:` + e)
-  }
-}
+//   try {
+//     const provider = new BrowserProvider(window.ethereum)
+//     const signer = await provider.getSigner()
+//     const contract = new Contract(
+//       Marketplace.address,
+//       Marketplace.abi,
+//       await signer,
+//     )
+//     const transaction = await contract.getCurrentToken()
+//     await transaction.wait()
+//     console.log(`You successfully Query Current NFT!`)
+//     return transaction
+//   } catch (e) {
+//     throw new Error(`查询当前NFT的失败,:` + e)
+//   }
+// }
 
 /**
  * 功能：返回当前的 NFT 上架费用（listPrice）。
  * @returns {ListedToken | null}
  */
-export const getListPrice = async (): Promise<BigNumberish> => {
-  if (!window.ethereum) {
-    return 0
-  }
+// export const getListPrice = async (): Promise<BigNumberish> => {
+//   if (!window.ethereum) {
+//     return 0
+//   }
 
-  try {
-    const provider = new BrowserProvider(window.ethereum)
-    const signer = await provider.getSigner()
-    const contract = new Contract(
-      Marketplace.address,
-      Marketplace.abi,
-      await signer,
-    )
-    const transaction = await contract.getListPrice()
-    await transaction.wait()
-    console.log(`You successfully Query Current List NFT Price!`)
-    return transaction
-  } catch (e) {
-    throw new Error(`查询当前NFT 上架费用失败,:` + e)
-  }
-}
+//   try {
+//     const provider = new BrowserProvider(window.ethereum)
+//     const signer = await provider.getSigner()
+//     const contract = new Contract(
+//       Marketplace.address,
+//       Marketplace.abi,
+//       await signer,
+//     )
+//     const transaction = await contract.getListPrice()
+//     await transaction.wait()
+//     console.log(`You successfully Query Current List NFT Price!`)
+//     return transaction
+//   } catch (e) {
+//     throw new Error(`查询当前NFT 上架费用失败,:` + e)
+//   }
+// }
