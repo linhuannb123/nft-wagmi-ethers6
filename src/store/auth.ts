@@ -17,20 +17,22 @@ const useAuthStore = defineStore('auth', {
     setAuth(value: string) {
       this.currentAccount = value
     },
-    setStatus(value: 'disconnected' | 'connecting' | 'connected' | 'reconnecting') {
+    setStatus(
+      value: 'disconnected' | 'connecting' | 'connected' | 'reconnecting',
+    ) {
       this.status = value
     },
     setChain(value: number | undefined) {
-      this.chainId = value;
+      this.chainId = value
     },
     initAuth() {
-      this.currentAccount = undefined;
+      this.currentAccount = undefined
     },
     initStatus() {
-      this.status = 'connecting';
+      this.status = 'connecting'
     },
     initChain() {
-      this.chainId = undefined;
+      this.chainId = undefined
     },
   },
 })

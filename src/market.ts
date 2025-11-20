@@ -102,26 +102,29 @@ export const sumPriceArray = (priceArr: number[]) => {
  * @param decimalPlaces 保留的小数位数（默认为 2 位）
  * @returns 处理后的数字（或原始值，若输入无效）
  */
-export const roundNumber = (num: number | string, decimalPlaces: number = 2): number | string => {
+export const roundNumber = (
+  num: number | string,
+  decimalPlaces: number = 2,
+): number | string => {
   // 校验小数位数参数（必须是非负整数）
   if (!Number.isInteger(decimalPlaces) || decimalPlaces < 0) {
-    console.error('小数位数必须是非负整数');
-    return num; // 输入无效时返回原始值
+    console.error('小数位数必须是非负整数')
+    return num // 输入无效时返回原始值
   }
 
   // 处理输入为字符串的情况
-  const number = typeof num === 'string' ? parseFloat(num) : num;
+  const number = typeof num === 'string' ? parseFloat(num) : num
 
   // 校验输入是否为有效数字
   if (isNaN(number)) {
-    console.error('输入必须是有效的数字或数字字符串');
-    return num; // 输入无效时返回原始值
+    console.error('输入必须是有效的数字或数字字符串')
+    return num // 输入无效时返回原始值
   }
 
   // 四舍五入核心逻辑（利用 10 的幂次放大后取整，再缩小）
-  const power = Math.pow(10, decimalPlaces);
-  return Math.round(number * power) / power;
-};
+  const power = Math.pow(10, decimalPlaces)
+  return Math.round(number * power) / power
+}
 
 /**
  * 判断是否为空字符串
@@ -151,9 +154,9 @@ export const formatUserAddress = (addr: string): string => {
   return `0x${addressWithoutPrefix.slice(0, 8)}...${addressWithoutPrefix.slice(-8)}`
 }
 
-export const WALLET_ERROR = 'Please install MetaMask!';
-export const CHIAN_ID_ERROR = 'Please switch Localhost network!';
-export const CONNECT_ERROR = 'Please connect wallet!';
+export const WALLET_ERROR = 'Please install MetaMask!'
+export const CHIAN_ID_ERROR = 'Please switch Localhost network!'
+export const CONNECT_ERROR = 'Please connect wallet!'
 // 创建Token
 
 // export const createMyToken = async (contract:Contract,tokenUrl: string, price: string, ListingPrice: string): Promise<any> => {
