@@ -1,6 +1,6 @@
 {
-  "name": "SellNFT",
+  "title": "ListMyNFT",
   "icon": "heyue",
   "order": 2,
-  "isParams": false
+  "isDynamic": false
 }

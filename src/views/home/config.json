@@ -1,6 +1,6 @@
 {
-  "name": "Marketplace",
+  "title": "Marketplace",
   "icon": "heyue",
   "order": 1,
-  "isParams": false
+  "isDynamic": false
 }

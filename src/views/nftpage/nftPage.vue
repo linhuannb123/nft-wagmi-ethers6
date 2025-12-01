@@ -1,27 +1,10 @@
 <template>
   <!--  -->
-  <a-row
-    class="flex w-full text-white py-[6rem] gap-10"
-    style="align-items: stretch; justify-content: space-evenly">
-    <a-col
-      :xs="20"
-      :sm="18"
-      :md="14"
-      :lg="10"
-      :xl="10"
-      :xxl="10">
-      <img
-        class="flex w-full h-full object-cover"
-        :src="data.image"
-        :alt="data.name" />
+  <a-row class="flex w-full text-white py-[6rem] gap-10" style="align-items: stretch; justify-content: space-evenly">
+    <a-col :xs="20" :sm="18" :md="14" :lg="10" :xl="10" :xxl="10">
+      <img class="flex w-full h-full object-cover" :src="data.image" :alt="data.name" />
     </a-col>
-    <a-col
-      :xs="20"
-      :sm="18"
-      :md="14"
-      :lg="10"
-      :xl="10"
-      :xxl="10"
+    <a-col :xs="20" :sm="18" :md="14" :lg="10" :xl="10" :xxl="10"
       class="border-b-2 font-bold text-xl border p-5 w-fit shadow-lg rounded-lg space-y-8">
       <div>
         Name
@@ -55,15 +38,10 @@
         </span>
       </div>
       <div>
-        <a-button
-          type="primary"
-          v-if="address !== data.owner && address !== data.seller"
-          @click="buyNFT(data.tokenId)">
+        <a-button type="primary" v-if="address !== data.owner && address !== data.seller" @click="buyNFT(data.tokenId)">
           Buy this NFT
         </a-button>
-        <p
-          v-if="address == data.owner || address == data.seller"
-          class="text-emerald-700">
+        <p v-if="address == data.owner || address == data.seller" class="text-emerald-700">
           {{ 'You are the owner of this NFT' }}
         </p>
       </div>
@@ -125,6 +103,7 @@ const buyNFT = async (tokenId: number) => {
     })
     await transaction.wait()
     success('You successfully bought the NFT!')
+    await getNFTData(tokenId)
   } catch (e: any) {
     // 详细的错误处理
     if (e.message.includes('Network Error')) {

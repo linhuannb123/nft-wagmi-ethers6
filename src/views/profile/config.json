@@ -1,6 +1,6 @@
 {
-  "name": "Profile",
+  "title": "Profile",
   "icon": "heyue",
   "order": 3,
-  "isParams": false
+  "isDynamic": false
 }

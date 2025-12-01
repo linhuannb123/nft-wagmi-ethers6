@@ -30,8 +30,6 @@
   "dependencies": {
     "@arco-design/web-vue": "^2.57.0",
     "@openzeppelin/contracts": "^4.9.6",
-    "@reown/appkit": "^1.8.14",
-    "@reown/appkit-adapter-wagmi": "^1.8.14",
     "@tanstack/vue-query": "^5.91.2",
     "@tsconfig/node20": "^20.1.8",
     "@types/chai": "^4.3.20",
@@ -39,7 +37,6 @@
     "@types/node": "^22.19.1",
     "@types/web3": "^1.2.2",
     "@vueuse/core": "^13.9.0",
-    "@wagmi/core": "2.22.1",
     "@wagmi/vue": "latest",
     "assert": "^2.1.0",
     "autoprefixer": "^10.4.22",

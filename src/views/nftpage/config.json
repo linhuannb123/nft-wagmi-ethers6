@@ -1,7 +1,6 @@
 {
-  "name": "nftPage",
+  "title": "tokenId",
   "icon": "heyue",
   "order": 4,
-  "isParams": true
-
+  "isDynamic": true
 }

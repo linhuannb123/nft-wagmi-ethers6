@@ -1,7 +1,8 @@
+@charset "UTF-8";
 @font-face {
   font-family: KHTeka;
   font-weight: 500;
-  src: url('https://fonts.reown.com/KHTeka-Medium.woff2') format('woff2');
+  src: url("https://fonts.reown.com/KHTeka-Medium.woff2") format("woff2");
 }
 
 /* 确保页面元素使用了该字体 */
