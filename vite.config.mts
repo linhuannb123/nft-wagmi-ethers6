@@ -43,7 +43,6 @@ const config = defineConfig(({ command, mode }: ConfigEnv): any => {
         '@openzeppelin/contracts', // 合约ABI通常是静态导出，不需要预构建
         'hardhat', // 仅后端脚本使用，前端不打包
         '@nomicfoundation/*', // 仅Hardhat工具链，前端无用
-        'lodash', // 若用了lodash-es建议保留，否则可移除（你依赖里写的是lodas，可能是笔误！）
       ],
     },
     // 路径解析
