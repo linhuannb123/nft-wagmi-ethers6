@@ -17,17 +17,17 @@
   </div>
 </template>
 <script setup lang="ts">
-import useModalStore from '@/store/modal'
 import Header from '@/components/Header.vue'
 import Connect from '@/components/ConnectWallet.vue'
 import UserWallet from './components/UserWallet.vue'
 import { onMounted, computed } from 'vue'
+import { useModalStoreWithOut } from './store/modules/modal'
 defineOptions({
   name: 'App',
 })
-const modelStore = useModalStore()
-const isOpen = computed(() => modelStore.isOpen)
-const isConnected = computed(() => modelStore.isConnected)
+const modelStore = useModalStoreWithOut()
+const isOpen = computed(() => modelStore.$state.isOpen)
+const isConnected = computed(() => modelStore.$state.isConnected)
 const closeModel = () => {
   modelStore.closeModal()
 }

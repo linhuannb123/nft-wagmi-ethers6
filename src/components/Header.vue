@@ -111,13 +111,13 @@ import { RouteRecordRaw, useRoute } from 'vue-router'
 import { computed, watch } from 'vue'
 import { formatAddress } from '@/market'
 import { useAccount } from '@wagmi/vue'
-import useModalStore from '@/store/modal'
+import { useModalStoreWithOut } from '@/store/modules/modal'
 
 defineOptions({
   name: 'Header',
 })
 
-const modalStore = useModalStore()
+const modalStore = useModalStoreWithOut()
 const route = useRoute()
 const filteredRoutes = computed(() =>
   routeState.allRoutes.value.filter(
@@ -203,4 +203,3 @@ watch(
   cursor: pointer;
 }
 </style>
-

@@ -1,15 +1,13 @@
 import { defineStore } from 'pinia'
+import { AuthState } from './types'
+import piniaStore from '@/store/index'
 //  undefined undefined connecting
-interface AuthState {
-  currentAccount: string | undefined
-  status: 'disconnected' | 'connecting' | 'connected' | 'reconnecting'
-  chainId: number | undefined
-}
-const useAuthStore = defineStore('auth', {
+
+export const useAuthStore = defineStore('auth', {
   state: (): AuthState => {
     return {
       currentAccount: undefined,
-      status: 'connecting',
+      status: 'disconnected',
       chainId: undefined,
     }
   },
@@ -17,9 +15,7 @@ const useAuthStore = defineStore('auth', {
     setAuth(value: string) {
       this.currentAccount = value
     },
-    setStatus(
-      value: 'disconnected' | 'connecting' | 'connected' | 'reconnecting',
-    ) {
+    setStatus(value: 'disconnected' | 'connected') {
       this.status = value
     },
     setChain(value: number | undefined) {
@@ -29,12 +25,18 @@ const useAuthStore = defineStore('auth', {
       this.currentAccount = undefined
     },
     initStatus() {
-      this.status = 'connecting'
+      this.status = 'disconnected'
     },
     initChain() {
       this.chainId = undefined
     },
   },
+  persist: {
+    storage: localStorage, // 存储方式
+    pick: ['currentAccount', 'status', 'chainId'], // 要持久化的字段
+  },
 })
 
-export default useAuthStore
+export function useAuthOutStore() {
+  return useAuthStore(piniaStore)
+}

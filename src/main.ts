@@ -6,9 +6,9 @@ import ArcoVue from '@arco-design/web-vue'
 import '@arco-design/web-vue/dist/arco.css'
 import ArcoVueIcon from '@arco-design/web-vue/es/icon'
 import '@arco-design/web-vue/dist/arco.css'
-import { createPinia } from 'pinia'
+import pinia from '@/store'
 // import Header from './components/Header.vue';
-import persist from 'pinia-plugin-persistedstate'
+
 import { registerCommonComponent } from './components'
 import { WagmiPlugin } from '@wagmi/vue'
 import { QueryClient, VueQueryPlugin } from '@tanstack/vue-query'
@@ -24,10 +24,13 @@ if (!import.meta.env.VITE_PROJECT_ID) {
   throw new Error('VITE_PROJECT_ID is not defined in environment variables')
 }
 const queryClient = new QueryClient()
-const pinia = createPinia()
-pinia.use(persist)
 
+/**
+ * 应用启动函数
+ * 异步初始化Vue应用并配置各种插件和组件
+ */
 async function bootstrap() {
+  // 创建Vue应用实例
   const app = createApp(App)
   const router = await routeState.initRouter() // 异步初始化路由
   registerCommonComponent(app)
